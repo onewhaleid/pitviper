@@ -49,10 +49,13 @@ if exist "%UV_PROJECT%" (
     uv init !ARGS!
     uv sync
     echo Environment "%ENV%" created at "%UV_PROJECT%"
+    echo:
+    echo Activate the environment using `pv activate %ENV%`
 )
-    :: Export UV_PROJECT to the parent shell (persist after setlocal)
-    for /f "delims=" %%A in ('echo(^!UV_PROJECT^!') do endlocal & set "UV_PROJECT=%%A"
-    exit /b
+
+:: Export UV_PROJECT to the parent shell (persist after setlocal)
+for /f "delims=" %%A in ('echo(^!UV_PROJECT^!') do endlocal & set "UV_PROJECT=%%A"
+exit /b
 
 :: Activate existing environment
 :activate
