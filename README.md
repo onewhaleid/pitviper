@@ -27,7 +27,7 @@ Activate environment
 Deactivate environment  
 `pv deactivate`
 
-Remove environment  
-`pv remove myenv`
+Delete environment  
+`pv delete myenv`
 
 

@@ -7,7 +7,7 @@ set "cmd=%~1"
 if "%cmd%"=="" goto :usage
 
 if /I "%cmd%"=="create" goto :create
-if /I "%cmd%"=="remove" goto :remove
+if /I "%cmd%"=="delete" goto :delete
 if /I "%cmd%"=="activate" goto :activate
 if /I "%cmd%"=="deactivate" goto :deactivate
 if /I "%cmd%"=="info" goto :info
@@ -23,13 +23,13 @@ echo Commands:
 echo   create ENV [ARGS]     Create environment and initialize
 echo   activate ENV          Activate environment and set UV_PROJECT
 echo   deactivate ENV        Deactivate environment
-echo   remove [-y] ENV       Remove environment (asks for confirmation)
+echo   delete [-y] ENV       Delete environment
 echo   info                  Show environment info
 echo.
 echo Examples:
 echo   pv create myenv
 echo   pv activate myenv
-echo   pv remove -y myenv
+echo   pv delete myenv
 exit /b 0
 
 :: Create new environment
@@ -86,12 +86,12 @@ set "UV_PROJECT=%ENV_HOME%\%ENV%"
     )
     exit /b
 
-:remove
+:delete
 set "ENV="
 set "FORCE=0"
 set /a count=0
 
-:: Parse args: allow `pv remove -y name` or `pv remove name -y`
+:: Parse args: allow `pv delete -y name` or `pv delete name -y`
 for %%A in (%*) do (
     set /a count+=1
     if !count! gtr 1 (
@@ -104,7 +104,7 @@ for %%A in (%*) do (
 )
 
 if "%ENV%"=="" (
-    echo Usage: pv remove [-y] ENV
+    echo Usage: pv delete [-y] ENV
     exit /b 1
 )
 
@@ -116,7 +116,7 @@ if not exist "%UV_PROJECT%" (
 )
 
 if "%FORCE%"=="0" (
-    set /p CONF=Remove environment "%ENV%" at "%UV_PROJECT%"? [y/N] 
+    set /p CONF=delete environment "%ENV%" at "%UV_PROJECT%"? [y/N] 
     if "!CONF!"=="" set "CONF=n"
     if /I "!CONF!" NEQ "y" (
         echo Aborted.
@@ -124,14 +124,14 @@ if "%FORCE%"=="0" (
     )
 )
 
-echo Removing environment "%ENV%" at "%UV_PROJECT%"...
+echo Deleting environment "%ENV%" at "%UV_PROJECT%"...
 rmdir /s /q "%UV_PROJECT%"
 if exist "%UV_PROJECT%" (
-    echo Failed to remove "%UV_PROJECT%".
+    echo Failed to delete "%UV_PROJECT%".
     exit /b 1
 )
 
-echo Removed "%UV_PROJECT%".
+echo deleted "%UV_PROJECT%".
 :: Clear UV_PROJECT in the parent shell (persist empty value)
 endlocal & set "UV_PROJECT="
 exit /b 0
