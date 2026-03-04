@@ -9,7 +9,6 @@ if "%cmd%"=="" goto :usage
 if /I "%cmd%"=="create" goto :create
 if /I "%cmd%"=="delete" goto :delete
 if /I "%cmd%"=="activate" goto :activate
-if /I "%cmd%"=="deactivate" goto :deactivate
 if /I "%cmd%"=="info" goto :info
 
 :: Default: forward everything to uv
@@ -22,7 +21,6 @@ echo.
 echo Commands:
 echo   create ENV [ARGS]     Create environment and initialize
 echo   activate ENV          Activate environment and set UV_PROJECT
-echo   deactivate ENV        Deactivate environment
 echo   delete [-y] ENV       Delete environment
 echo   info                  Show environment info
 echo.
@@ -75,18 +73,6 @@ set "ENV=%~2"
     )
     exit /b
 
-:deactivate
-set "ENV=%~2"
-set "UV_PROJECT=%ENV_HOME%\%ENV%"
-
-    :: Export UV_PROJECT to the parent shell, then call the deactivate script in that shell
-    for /f "delims=" %%A in ('echo(^!UV_PROJECT^!') do endlocal & set "UV_PROJECT=%%A"
-
-    set "DEACTIVATE=%UV_PROJECT%\.venv\Scripts\deactivate.bat"
-    if exist "%DEACTIVATE%" (
-        call "%DEACTIVATE%"
-    )
-    exit /b
 
 :delete
 set "ENV="
