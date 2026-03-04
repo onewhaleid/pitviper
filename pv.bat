@@ -35,22 +35,24 @@ exit /b 0
 :: Create new environment
 :create
 set "ENV=%~2"
-set "UV_PROJECT=%ENV_HOME%\%ENV%"
+set "ENV_DIR=%ENV_HOME%\%ENV%"
 
-if exist "%UV_PROJECT%" (
-    echo Environment exists at "%UV_PROJECT%"
+if exist "%ENV_DIR%" (
+    echo Environment exists at "%ENV_DIR%"
 ) else (
-    mkdir "%UV_PROJECT%"
+    mkdir "%ENV_DIR%"
 
     :: Drop the first two args, then call uv with the remaining args
     set "ARGS="
     for /f "tokens=3* delims= " %%A in ("%*") do set "ARGS=%%A %%B"
 
-    uv init !ARGS!
+    uv init !ARGS! %ENV_DIR%
+    set "UV_PROJECT=%ENV_HOME%\%ENV%"
     uv sync
-    echo Environment "%ENV%" created at "%UV_PROJECT%"
+    echo Environment "%ENV%" created at "%ENV_DIR%"
     echo:
     echo Activate the environment using `pv activate %ENV%`
+    set UV_PROJECT=
 )
 
 :: Export UV_PROJECT to the parent shell (persist after setlocal)
