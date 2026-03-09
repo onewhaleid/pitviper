@@ -32,4 +32,5 @@ Delete environment
 
 ## Demo
 
-![](docs/pv-usage.gif)
+<img src="docs/pv-usage.gif" height=250>
+
