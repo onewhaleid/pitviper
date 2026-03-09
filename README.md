@@ -30,4 +30,6 @@ Deactivate environment
 Delete environment  
 `pv delete myenv`
 
+## Demo
 
+![](docs/pv-usage.gif)
